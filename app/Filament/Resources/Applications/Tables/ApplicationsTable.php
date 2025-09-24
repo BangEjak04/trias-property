@@ -34,9 +34,16 @@ class ApplicationsTable
                     })
                     ->visible(fn (Page $livewire) => $livewire->activeTab == 'user'),
                 TextColumn::make('notes')
-                    ->html(),
+                    ->html()
+                    ->toggleable(),
                 TextColumn::make('created_at')
-                    ->dateTime(),
+                    ->dateTime()
+                    ->toggleable()
+                    ->sortable(),
+                TextColumn::make('updated_at')
+                    ->dateTime()
+                    ->toggleable()
+                    ->sortable(),
             ])
             ->defaultGroup(fn (Page $livewire) => match ($livewire->activeTab) {
                 'prospect' => 'priority',

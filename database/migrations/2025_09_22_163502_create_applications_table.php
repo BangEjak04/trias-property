@@ -26,17 +26,22 @@ return new class extends Migration
             $table->double('price_range_to')->nullable();
             $table->text('notes')->nullable();
 
-            $table->string('address')->nullable();
+            $table->string('property')->nullable();
             $table->string('type')->nullable();
             $table->string('block')->nullable();
+            $table->string('number')->nullable();
             $table->integer('land_area')->nullable();
             $table->integer('building_area')->nullable();
             $table->double('price')->nullable();
+            $table->double('credit_approval')->nullable();
             $table->date('down_payment_date')->nullable();
+            $table->date('approval_date')->nullable();
             $table->string('bank_name')->nullable();
             $table->string('id_card')->nullable();
             $table->string('payment_method')->nullable();
             $table->string('payment_proof')->nullable();
+            $table->string('marketing_agent')->nullable();
+            $table->string('document_progress')->nullable();
 
             $table->timestamps();
         });

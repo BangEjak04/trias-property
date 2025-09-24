@@ -36,6 +36,14 @@ class ListApplications extends ListRecords
                 ->modifyQueryUsing(fn (Builder $query) => $query->where('status', 'user'))
                 ->badge(Application::query()->where('status', 'user')->count())
                 ->badgeColor('primary'),
+            'akad' => Tab::make()
+                ->modifyQueryUsing(fn (Builder $query) => $query->where('approval', 'accepted'))
+                ->badge(Application::query()->where('approval', 'accepted')->count())
+                ->badgeColor('info'),
+            'reject' => Tab::make()
+                ->modifyQueryUsing(fn (Builder $query) => $query->where('approval', 'rejected'))
+                ->badge(Application::query()->where('approval', 'rejected')->count())
+                ->badgeColor('danger'),
         ];
     }
 }
