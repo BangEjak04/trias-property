@@ -19,13 +19,13 @@ class ViewApplication extends ViewRecord
         return [
             EditAction::make()
                 ->icon(LucideIcon::Edit),
-            Action::make('addComent')
-                ->label('Add Comment')
+            Action::make('addComment')
+                ->label('Tambah Komentar')
                 ->icon(LucideIcon::MessageCircle)
                 ->color('success')
                 ->schema([
                     RichEditor::make('content')
-                        ->label('Content')
+                        ->label('Konten')
                         ->required()
                         ->columnSpanFull(),
                 ])

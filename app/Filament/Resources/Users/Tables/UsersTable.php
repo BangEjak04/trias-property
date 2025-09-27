@@ -16,13 +16,17 @@ class UsersTable
         return $table
             ->columns([
                 TextColumn::make('name')
+                    ->label('Nama'),
+                TextColumn::make('roles.name')
+                    ->badge()
+                    ->label('Peran'),
             ])
             ->filters([
                 //
             ])
             ->recordActions([
                 ViewAction::make(),
-                EditAction::make(),
+                // EditAction::make(),
             ])
             ->toolbarActions([
                 BulkActionGroup::make([

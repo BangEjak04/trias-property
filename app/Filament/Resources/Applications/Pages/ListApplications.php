@@ -23,7 +23,7 @@ class ListApplications extends ListRecords
     public function getTabs(): array
     {
         return [
-            'all' => Tab::make(),
+            'semua' => Tab::make(),
             'prospect' => Tab::make()
                 ->modifyQueryUsing(fn (Builder $query) => $query->where('status', 'prospect'))
                 ->badge(Application::query()->where('status', 'prospect')->count())

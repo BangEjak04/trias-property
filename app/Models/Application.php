@@ -19,7 +19,6 @@ class Application extends Model
         'email',
         'phone',
         'developer',
-        'location',
         'price_range_from',
         'price_range_to',
         'notes',

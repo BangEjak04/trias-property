@@ -21,7 +21,6 @@ return new class extends Migration
             $table->string('email')->unique()->nullable();
             $table->string('phone')->nullable();
             $table->string('developer')->nullable();
-            $table->string('location')->nullable();
             $table->double('price_range_from')->nullable();
             $table->double('price_range_to')->nullable();
             $table->text('notes')->nullable();

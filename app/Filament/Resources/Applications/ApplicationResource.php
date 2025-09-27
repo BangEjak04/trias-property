@@ -24,6 +24,8 @@ class ApplicationResource extends Resource
 
     protected static ?string $recordTitleAttribute = 'name';
 
+    protected static ?string $modelLabel = 'Permohonan';
+
     public static function form(Schema $schema): Schema
     {
         return ApplicationForm::configure($schema);
