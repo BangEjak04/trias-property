@@ -1,0 +1,37 @@
+<?php
+
+namespace App\Filament\Resources\Users\Pages;
+
+use App\Filament\Resources\Users\UserResource;
+use Filament\Actions\DeleteAction;
+use Filament\Resources\Pages\EditRecord;
+use Illuminate\Support\Facades\Hash;
+use Override;
+
+class EditUser extends EditRecord
+{
+    protected static string $resource = UserResource::class;
+
+    protected function getHeaderActions(): array
+    {
+        return [
+            DeleteAction::make(),
+        ];
+    }
+
+    #[Override]
+    protected function mutateFormDataBeforeSave(array $data): array
+    {
+        if (array_key_exists('new_password', $data) && filled($data['new_password'])) {
+            $this->record->password = Hash::make($data['new_password']);
+        }
+
+        return $data;
+    }
+
+    #[Override]
+    protected function getRedirectUrl(): ?string
+    {
+        return $this->previousUrl ?? $this->getResource()::getUrl('index');
+    }
+}
