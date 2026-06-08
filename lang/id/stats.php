@@ -16,6 +16,6 @@ return [
     'akad' => 'Akad',
     'akad_desc' => 'Permohonan disetujui',
 
-    'reject' => 'Ditolak',
+    'reject' => 'Reject',
     'reject_desc' => 'Permohonan tidak disetujui',
 ];

@@ -25,16 +25,16 @@ class ApplicationHotProspectForm
                             TextInput::make('applicant_name')
                                 ->required()
                                 ->maxLength(255)
-                                ->label(__('application.field.applicant.name')),
+                                ->label(__('application.field.applicant_name')),
                             TextInput::make('applicant_phone')
                                 ->required()
                                 ->tel()
                                 ->prefix('+62')
-                                ->label(__('application.field.applicant.phone')),
+                                ->label(__('application.field.applicant_phone')),
                             TextInput::make('applicant_email')
                                 ->email()
                                 ->maxLength(255)
-                                ->label(__('application.field.applicant.email')),
+                                ->label(__('application.field.applicant_email')),
                         ]),
                     Section::make(__('application.section.property.heading'))
                         ->description(__('application.section.property.description'))
@@ -45,17 +45,17 @@ class ApplicationHotProspectForm
                                 ->label(__('application.field.developer')),
                             TextInput::make('property_name')
                                 ->maxLength(255)
-                                ->label(__('application.field.property.name')),
+                                ->label(__('application.field.property_name')),
                             TextInput::make('property_type')
                                 ->maxLength(255)
-                                ->label(__('application.field.property.type')),
+                                ->label(__('application.field.property_type')),
                             Fieldset::make()
-                                ->label(__('application.field.property.price_range.label'))
+                                ->label(__('application.field.price_range_label'))
                                 ->components([
                                     MoneyInput::make('price_range_from')
-                                        ->label(__('application.field.property.price_range.minimum')),
+                                        ->label(__('application.field.price_range_from')),
                                     MoneyInput::make('price_range_to')
-                                        ->label(__('application.field.property.price_range.maximum'))
+                                        ->label(__('application.field.price_range_to'))
                                         ->gte('price_range_from'),
                                 ]),
                         ]),
@@ -63,8 +63,10 @@ class ApplicationHotProspectForm
                         ->description(__('application.section.internal.description'))
                         ->aside()
                         ->components([
-                            TextInput::make('marketing_agent'),
-                            RichEditor::make('notes'),
+                            TextInput::make('marketing_agent')
+                                ->label(__('application.field.marketing_agent')),
+                            RichEditor::make('notes')
+                                ->label(__('application.field.notes')),
                         ]),
                 ])
                 ->columns(1)

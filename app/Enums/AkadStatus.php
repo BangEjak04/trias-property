@@ -9,17 +9,17 @@ use Override;
 
 enum AkadStatus: string implements HasColor, HasLabel
 {
-    case ON_PROGRESS = 'on_progress';
+    case SCHEDULED = 'scheduled';
     case DONE = 'done';
-    case CANCELED = 'canceled';
+    case CANCELLED = 'cancelled';
 
     #[Override]
     public function getLabel(): string|Htmlable|null
     {
         return match ($this) {
-            self::ON_PROGRESS => 'On Progress',
-            self::DONE => 'Done',
-            self::CANCELED => 'Canceled',
+            self::SCHEDULED => __('application.field.akad_status_type_scheduled'),
+            self::DONE => __('application.field.akad_status_type_done'),
+            self::CANCELLED => __('application.field.akad_status_type_cancelled'),
         };
     }
 
@@ -27,9 +27,9 @@ enum AkadStatus: string implements HasColor, HasLabel
     public function getColor(): string|array|null
     {
         return match ($this) {
-            self::ON_PROGRESS => 'gray',
+            self::SCHEDULED => 'gray',
             self::DONE => 'success',
-            self::CANCELED => 'danger',
+            self::CANCELLED => 'danger',
         };
     }
 }

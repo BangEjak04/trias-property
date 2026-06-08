@@ -24,29 +24,76 @@ class ListApplications extends ListRecords
         ];
     }
 
+    private static ?object $tabCounts = null;
+
+    protected static function getTabCounts(): object
+    {
+        if (self::$tabCounts === null) {
+            self::$tabCounts = Application::query()
+                ->selectRaw('
+                    COUNT(*) as total,
+                    SUM(status = ?) as prospect,
+                    SUM(status = ?) as hot_prospect,
+                    SUM(
+                        status = ?
+                        AND (approval_status IS NULL OR approval_status != ?)
+                        AND (akad_status IS NULL OR akad_status NOT IN (?, ?))
+                    ) as user_proses,
+                    SUM(status = ? AND akad_status = ?) as akad,
+                    SUM(
+                        status = ? AND (
+                            approval_status = ?
+                            OR akad_status = ?
+                        )
+                    ) as reject
+                ', [
+                    StatusType::PROSPECT->value,
+                    StatusType::HOT_PROSPECT->value,
+                    StatusType::USER->value,
+                    ApprovalStatus::REJECTED->value,
+                    AkadStatus::CANCELLED->value,
+                    AkadStatus::DONE->value,
+                    StatusType::USER->value, AkadStatus::DONE->value,
+                    StatusType::USER->value,
+                    ApprovalStatus::REJECTED->value,
+                    AkadStatus::CANCELLED->value,
+                ])
+                ->first() ?? (object) [
+                    'total' => 0,
+                    'prospect' => 0,
+                    'hot_prospect' => 0,
+                    'user_proses' => 0,
+                    'akad' => 0,
+                    'reject' => 0,
+                ];
+        }
+
+        return self::$tabCounts;
+    }
+
     #[Override]
     public function getTabs(): array
     {
+        $counts = static::getTabCounts();
+
         return [
             'all' => Tab::make()
-                ->label(__('stats.total')),
+                ->label(__('stats.total'))
+                ->badge((int) ($counts->total ?? 0))
+                ->badgeColor('gray'),
 
             'prospect' => Tab::make()
                 ->label(__('stats.prospect'))
                 ->modifyQueryUsing(fn (Builder $query) => $query
                     ->where('status', StatusType::PROSPECT))
-                ->badge(Application::query()
-                    ->where('status', StatusType::PROSPECT)
-                    ->count())
+                ->badge((int) ($counts->prospect ?? 0))
                 ->badgeColor('success'),
 
             'hot_prospect' => Tab::make()
                 ->label(__('stats.hot_prospect'))
                 ->modifyQueryUsing(fn (Builder $query) => $query
                     ->where('status', StatusType::HOT_PROSPECT))
-                ->badge(Application::query()
-                    ->where('status', StatusType::HOT_PROSPECT)
-                    ->count())
+                ->badge((int) ($counts->hot_prospect ?? 0))
                 ->badgeColor('warning'),
 
             'user' => Tab::make()
@@ -59,21 +106,10 @@ class ListApplications extends ListRecords
                     ->where(fn (Builder $q) => $q
                         ->whereNull('akad_status')
                         ->orWhereNotIn('akad_status', [
-                            AkadStatus::CANCELED->value,
+                            AkadStatus::CANCELLED->value,
                             AkadStatus::DONE->value,
                         ])))
-                ->badge(Application::query()
-                    ->where('status', StatusType::USER)
-                    ->where(fn (Builder $q) => $q
-                        ->whereNull('approval_status')
-                        ->orWhere('approval_status', '!=', ApprovalStatus::REJECTED))
-                    ->where(fn (Builder $q) => $q
-                        ->whereNull('akad_status')
-                        ->orWhereNotIn('akad_status', [
-                            AkadStatus::CANCELED->value,
-                            AkadStatus::DONE->value,
-                        ]))
-                    ->count())
+                ->badge((int) ($counts->user_proses ?? 0))
                 ->badgeColor('primary'),
 
             'akad' => Tab::make()
@@ -81,10 +117,7 @@ class ListApplications extends ListRecords
                 ->modifyQueryUsing(fn (Builder $query) => $query
                     ->where('status', StatusType::USER)
                     ->where('akad_status', AkadStatus::DONE))
-                ->badge(Application::query()
-                    ->where('status', StatusType::USER)
-                    ->where('akad_status', AkadStatus::DONE)
-                    ->count())
+                ->badge((int) ($counts->akad ?? 0))
                 ->badgeColor('info'),
 
             'reject' => Tab::make()
@@ -93,13 +126,8 @@ class ListApplications extends ListRecords
                     ->where('status', StatusType::USER)
                     ->where(fn (Builder $q) => $q
                         ->where('approval_status', ApprovalStatus::REJECTED)
-                        ->orWhere('akad_status', AkadStatus::CANCELED)))
-                ->badge(Application::query()
-                    ->where('status', StatusType::USER)
-                    ->where(fn (Builder $q) => $q
-                        ->where('approval_status', ApprovalStatus::REJECTED)
-                        ->orWhere('akad_status', AkadStatus::CANCELED))
-                    ->count())
+                        ->orWhere('akad_status', AkadStatus::CANCELLED)))
+                ->badge((int) ($counts->reject ?? 0))
                 ->badgeColor('danger'),
         ];
     }

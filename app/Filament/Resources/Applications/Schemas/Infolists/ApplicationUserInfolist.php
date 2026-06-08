@@ -3,7 +3,7 @@
 namespace App\Filament\Resources\Applications\Schemas\Infolists;
 
 use App\Enums\StatusType;
-use Filament\Infolists\Components\ImageEntry;
+use App\Filament\Infolists\Components\FilePreview;
 use Filament\Infolists\Components\TextEntry;
 use Filament\Schemas\Components\Fieldset;
 use Filament\Schemas\Components\Grid;
@@ -24,11 +24,13 @@ class ApplicationUserInfolist
                         ->components([
                             TextEntry::make('marketing_agent')
                                 ->label(__('application.field.marketing_agent'))
-                                ->weight(FontWeight::SemiBold),
+                                ->weight(FontWeight::SemiBold)
+                                ->placeholder('-'),
                             TextEntry::make('notes')
                                 ->label(__('application.field.notes'))
                                 ->weight(FontWeight::SemiBold)
-                                ->html(),
+                                ->html()
+                                ->placeholder('-'),
                         ]),
                     Section::make()
                         ->label(__('application.section.property.heading'))
@@ -37,58 +39,70 @@ class ApplicationUserInfolist
                         ->components([
                             TextEntry::make('developer')
                                 ->label(__('application.field.developer'))
-                                ->weight(FontWeight::SemiBold),
+                                ->weight(FontWeight::SemiBold)
+                                ->placeholder('-'),
                             TextEntry::make('property_name')
-                                ->label(__('application.field.property.name'))
-                                ->weight(FontWeight::SemiBold),
+                                ->label(__('application.field.property_name'))
+                                ->weight(FontWeight::SemiBold)
+                                ->placeholder('-'),
                             TextEntry::make('property_type')
-                                ->label(__('application.field.property.type'))
-                                ->weight(FontWeight::SemiBold),
+                                ->label(__('application.field.property_type'))
+                                ->weight(FontWeight::SemiBold)
+                                ->placeholder('-'),
                             TextEntry::make('property_block')
-                                ->label(__('application.field.property.block'))
-                                ->weight(FontWeight::SemiBold),
+                                ->label(__('application.field.property_block'))
+                                ->weight(FontWeight::SemiBold)
+                                ->placeholder('-'),
                             TextEntry::make('property_number')
-                                ->label(__('application.field.property.number'))
-                                ->weight(FontWeight::SemiBold),
+                                ->label(__('application.field.property_number'))
+                                ->weight(FontWeight::SemiBold)
+                                ->placeholder('-'),
                             TextEntry::make('land_area')
-                                ->label(__('application.field.property.land_area'))
+                                ->label(__('application.field.land_area'))
                                 ->weight(FontWeight::SemiBold)
                                 ->numeric()
-                                ->formatStateUsing(fn (string $state): string => $state.' m²'),
+                                ->formatStateUsing(fn ($state): string => $state ? $state.' m²' : '-')
+                                ->placeholder('-'),
                             TextEntry::make('building_area')
-                                ->label(__('application.field.property.building_area'))
+                                ->label(__('application.field.building_area'))
                                 ->weight(FontWeight::SemiBold)
                                 ->numeric()
-                                ->formatStateUsing(fn (string $state): string => $state.' m²'),
+                                ->formatStateUsing(fn ($state): string => $state ? $state.' m²' : '-')
+                                ->placeholder('-'),
                             Fieldset::make()
-                                ->label(__('application.field.property.price_range.label'))
+                                ->label(__('application.field.price_range_label'))
                                 ->components([
                                     TextEntry::make('price_range_from')
-                                        ->label(__('application.field.property.price_range.minimum'))
+                                        ->label(__('application.field.price_range_from'))
                                         ->weight(FontWeight::SemiBold)
                                         ->numeric()
-                                        ->beforeContent('Rp'),
+                                        ->beforeContent('Rp ')
+                                        ->placeholder('-'),
                                     TextEntry::make('price_range_to')
-                                        ->label(__('application.field.property.price_range.maximum'))
+                                        ->label(__('application.field.price_range_to'))
                                         ->weight(FontWeight::SemiBold)
                                         ->numeric()
-                                        ->beforeContent('Rp'),
+                                        ->beforeContent('Rp ')
+                                        ->placeholder('-'),
                                 ]),
                             TextEntry::make('price')
-                                ->label(__('application.field.property.price'))
+                                ->label(__('application.field.price'))
                                 ->weight(FontWeight::SemiBold)
                                 ->numeric()
-                                ->beforeContent('Rp'),
+                                ->beforeContent('Rp ')
+                                ->placeholder('-'),
                             TextEntry::make('down_payment_amount')
                                 ->label(__('application.field.down_payment_amount'))
                                 ->weight(FontWeight::SemiBold)
                                 ->numeric()
-                                ->beforeContent('Rp'),
+                                ->beforeContent('Rp ')
+                                ->placeholder('-'),
                             TextEntry::make('loan_amount')
                                 ->label(__('application.field.loan_amount'))
                                 ->weight(FontWeight::SemiBold)
                                 ->numeric()
-                                ->beforeContent('Rp'),
+                                ->beforeContent('Rp ')
+                                ->placeholder('-'),
                         ]),
                     Section::make()
                         ->label(__('application.section.credit.heading'))
@@ -97,15 +111,16 @@ class ApplicationUserInfolist
                         ->components([
                             TextEntry::make('payment_method')
                                 ->label(__('application.field.payment_method'))
-                                ->weight(FontWeight::SemiBold),
+                                ->weight(FontWeight::SemiBold)
+                                ->placeholder('-'),
                             TextEntry::make('down_payment_date')
                                 ->label(__('application.field.down_payment_date'))
                                 ->date('j-M-Y')
-                                ->weight(FontWeight::SemiBold),
-                            TextEntry::make('down_payment_proof')
-                                ->label(__('application.field.down_payment_proof'))
-                                ->weight(FontWeight::SemiBold),
-                            ImageEntry::make('id_card')
+                                ->weight(FontWeight::SemiBold)
+                                ->placeholder('-'),
+                            FilePreview::make('down_payment_proof')
+                                ->label(__('application.field.down_payment_proof')),
+                            FilePreview::make('id_card')
                                 ->label(__('application.field.id_card')),
                         ]),
                     Section::make()
@@ -115,23 +130,28 @@ class ApplicationUserInfolist
                         ->components([
                             TextEntry::make('bank_name')
                                 ->label(__('application.field.bank_name'))
-                                ->weight(FontWeight::SemiBold),
+                                ->weight(FontWeight::SemiBold)
+                                ->placeholder('-'),
                             TextEntry::make('document_progress')
                                 ->label(__('application.field.document_progress'))
-                                ->weight(FontWeight::SemiBold),
+                                ->weight(FontWeight::SemiBold)
+                                ->placeholder('-'),
                             TextEntry::make('approval_status')
                                 ->label(__('application.field.approval'))
                                 ->weight(FontWeight::SemiBold)
-                                ->badge(),
+                                ->badge()
+                                ->placeholder('-'),
                             TextEntry::make('credit_approval')
                                 ->label(__('application.field.credit_approval'))
                                 ->weight(FontWeight::SemiBold)
                                 ->numeric()
-                                ->beforeContent('Rp'),
+                                ->beforeContent('Rp ')
+                                ->placeholder('-'),
                             TextEntry::make('approval_date')
                                 ->label(__('application.field.approval_date'))
                                 ->weight(FontWeight::SemiBold)
-                                ->date('j-M-Y'),
+                                ->date('j-M-Y')
+                                ->placeholder('-'),
                         ]),
                     Section::make()
                         ->label(__('application.section.akad.heading'))
@@ -140,12 +160,15 @@ class ApplicationUserInfolist
                         ->components([
                             TextEntry::make('akad_scheduled_at')
                                 ->label(__('application.field.akad_scheduled_at'))
-                                ->dateTime(),
+                                ->dateTime()
+                                ->placeholder('-'),
                             TextEntry::make('akad_location')
-                                ->label(__('application.field.akad_location')),
+                                ->label(__('application.field.akad_location'))
+                                ->placeholder('-'),
                             TextEntry::make('akad_status')
                                 ->label(__('application.field.akad_status'))
-                                ->badge(),
+                                ->badge()
+                                ->placeholder('-'),
                         ]),
                 ])
                 ->visible(fn (Get $get): bool => $get('status') == StatusType::USER),

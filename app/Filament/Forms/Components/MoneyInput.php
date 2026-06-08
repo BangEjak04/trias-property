@@ -12,7 +12,7 @@ class MoneyInput extends TextInput
 
     protected string $decimalSeparator = ',';
 
-    protected int $decimalPlaces = 2;
+    protected int $decimalPlaces = 0;
 
     protected string $currencyPrefix = 'Rp';
 

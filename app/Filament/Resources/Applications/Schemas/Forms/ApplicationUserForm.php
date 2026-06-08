@@ -31,23 +31,25 @@ class ApplicationUserForm
                             TextInput::make('applicant_name')
                                 ->required()
                                 ->maxLength(255)
-                                ->label(__('application.field.applicant.name')),
+                                ->label(__('application.field.applicant_name')),
                             TextInput::make('applicant_phone')
                                 ->required()
                                 ->tel()
                                 ->prefix('+62')
-                                ->label(__('application.field.applicant.phone')),
+                                ->label(__('application.field.applicant_phone')),
                             TextInput::make('applicant_email')
                                 ->email()
                                 ->maxLength(255)
-                                ->label(__('application.field.applicant.email')),
+                                ->label(__('application.field.applicant_email')),
                         ]),
                     Section::make(__('application.section.internal.heading'))
                         ->description(__('application.section.internal.description'))
                         ->aside()
                         ->components([
-                            TextInput::make('marketing_agent'),
-                            RichEditor::make('notes'),
+                            TextInput::make('marketing_agent')
+                                ->label(__('application.field.marketing_agent')),
+                            RichEditor::make('notes')
+                                ->label(__('application.field.notes')),
                         ]),
                     Section::make(__('application.section.property.heading'))
                         ->description(__('application.section.property.description'))
@@ -58,30 +60,30 @@ class ApplicationUserForm
                                 ->label(__('application.field.developer')),
                             TextInput::make('property_name')
                                 ->maxLength(255)
-                                ->label(__('application.field.property.name')),
+                                ->label(__('application.field.property_name')),
                             TextInput::make('property_type')
                                 ->maxLength(255)
-                                ->label(__('application.field.property.type')),
+                                ->label(__('application.field.property_type')),
                             TextInput::make('property_block')
                                 ->maxLength(255)
-                                ->label(__('application.field.property.block')),
+                                ->label(__('application.field.property_block')),
                             TextInput::make('property_number')
                                 ->maxLength(255)
-                                ->label(__('application.field.property.number')),
+                                ->label(__('application.field.property_number')),
                             Grid::make()
                                 ->components([
                                     TextInput::make('building_area')
-                                        ->label(__('application.field.property.building_area'))
+                                        ->label(__('application.field.building_area'))
                                         ->numeric()
                                         ->suffix('m²'),
                                     TextInput::make('land_area')
-                                        ->label(__('application.field.property.land_area'))
+                                        ->label(__('application.field.land_area'))
                                         ->numeric()
                                         ->suffix('m²'),
                                 ])
                                 ->columns(['default' => 2]),
                             MoneyInput::make('price')
-                                ->label(__('application.field.property.price')),
+                                ->label(__('application.field.price')),
                             MoneyInput::make('down_payment_amount')
                                 ->label(__('application.field.down_payment_amount')),
                             MoneyInput::make('loan_amount')
@@ -145,7 +147,8 @@ class ApplicationUserForm
                                 ->placeholder(__('application.field.akad_location_placeholder')),
                             Select::make('akad_status')
                                 ->label(__('application.field.akad_status'))
-                                ->options(AkadStatus::class),
+                                ->options(AkadStatus::class)
+                                ->native(false),
                         ]),
                 ])
                 ->columns(1)

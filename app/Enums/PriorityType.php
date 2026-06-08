@@ -17,9 +17,9 @@ enum PriorityType: string implements HasColor, HasLabel
     public function getLabel(): string|Htmlable|null
     {
         return match ($this) {
-            self::LOW => __('application.field.priority.type.low'),
-            self::MEDIUM => __('application.field.priority.type.medium'),
-            self::HIGH => __('application.field.priority.type.high'),
+            self::LOW => __('application.field.priority_low'),
+            self::MEDIUM => __('application.field.priority_medium'),
+            self::HIGH => __('application.field.priority_high'),
         };
     }
 

@@ -35,11 +35,11 @@ class StatsOverview extends StatsOverviewWidget
                 StatusType::HOT_PROSPECT->value,
                 StatusType::USER->value,
                 ApprovalStatus::REJECTED->value,
-                AkadStatus::CANCELED->value,
+                AkadStatus::CANCELLED->value,
                 AkadStatus::DONE->value,
                 StatusType::USER->value,
                 ApprovalStatus::REJECTED->value,
-                AkadStatus::CANCELED->value,
+                AkadStatus::CANCELLED->value,
                 StatusType::USER->value, AkadStatus::DONE->value,
             ])
             ->first();

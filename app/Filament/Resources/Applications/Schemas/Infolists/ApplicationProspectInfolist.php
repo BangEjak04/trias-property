@@ -24,27 +24,32 @@ class ApplicationProspectInfolist
                         ->components([
                             TextEntry::make('developer')
                                 ->label(__('application.field.developer'))
-                                ->weight(FontWeight::SemiBold),
+                                ->weight(FontWeight::SemiBold)
+                                ->placeholder('-'),
                             TextEntry::make('property_name')
-                                ->label(__('application.field.property.name'))
-                                ->weight(FontWeight::SemiBold),
+                                ->label(__('application.field.property_name'))
+                                ->weight(FontWeight::SemiBold)
+                                ->placeholder('-'),
                             TextEntry::make('property_type')
-                                ->label(__('application.field.property.type'))
-                                ->weight(FontWeight::SemiBold),
+                                ->label(__('application.field.property_type'))
+                                ->weight(FontWeight::SemiBold)
+                                ->placeholder('-'),
                             Fieldset::make()
-                                ->label(__('application.field.property.price_range.label'))
+                                ->label(__('application.field.price_range_label'))
                                 ->components([
                                     TextEntry::make('price_range_from')
-                                        ->label(__('application.field.property.price_range.minimum'))
+                                        ->label(__('application.field.price_range_from'))
                                         ->weight(FontWeight::SemiBold)
                                         ->numeric()
-                                        ->beforeContent('Rp'),
+                                        ->beforeContent('Rp ')
+                                        ->placeholder('-'),
                                     TextEntry::make('price_range_to')
-                                        ->label(__('application.field.property.price_range.maximum'))
+                                        ->label(__('application.field.price_range_to'))
                                         ->weight(FontWeight::SemiBold)
                                         ->numeric()
-                                        ->beforeContent('Rp'),
-                                ]),
+                                        ->beforeContent('Rp ')
+                                        ->placeholder('-'),
+                                 ]),
                         ]),
                     Section::make(__('application.section.internal.heading'))
                         ->description(__('application.section.internal.description'))
@@ -53,7 +58,8 @@ class ApplicationProspectInfolist
                             TextEntry::make('notes')
                                 ->label(__('application.field.notes'))
                                 ->weight(FontWeight::SemiBold)
-                                ->html(),
+                                ->html()
+                                ->placeholder('-'),
                         ]),
                 ])
                 ->visible(fn (Get $get): bool => $get('status') == StatusType::PROSPECT),
