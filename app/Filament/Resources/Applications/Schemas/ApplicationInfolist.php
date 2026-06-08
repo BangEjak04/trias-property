@@ -5,6 +5,8 @@ namespace App\Filament\Resources\Applications\Schemas;
 use App\Filament\Resources\Applications\Schemas\Infolists\ApplicationHotProspectInfolist;
 use App\Filament\Resources\Applications\Schemas\Infolists\ApplicationProspectInfolist;
 use App\Filament\Resources\Applications\Schemas\Infolists\ApplicationUserInfolist;
+use App\Models\Application;
+use CodeWithDennis\FilamentLucideIcons\Enums\LucideIcon;
 use Filament\Infolists\Components\TextEntry;
 use Filament\Schemas\Components\Section;
 use Filament\Schemas\Schema;
@@ -22,28 +24,50 @@ class ApplicationInfolist
                     ->aside()
                     ->components([
                         TextEntry::make('status')
-                            ->weight(FontWeight::SemiBold),
+                            ->weight(FontWeight::SemiBold)
+                            ->placeholder('-'),
                         TextEntry::make('priority')
-                            ->label(__('application.field.priority.label'))
-                            ->weight(FontWeight::SemiBold),
+                            ->label(__('application.field.priority'))
+                            ->weight(FontWeight::SemiBold)
+                            ->placeholder('-'),
                         TextEntry::make('applicant_name')
-                            ->label(__('application.field.applicant.name'))
-                            ->weight(FontWeight::SemiBold),
+                            ->label(__('application.field.applicant_name'))
+                            ->weight(FontWeight::SemiBold)
+                            ->placeholder('-'),
                         TextEntry::make('applicant_phone')
-                            ->label(__('application.field.applicant.phone'))
+                            ->label(__('application.field.applicant_phone'))
                             ->weight(FontWeight::SemiBold)
-                            ->formatStateUsing(fn ($state) => '+62'.$state)
-                            ->url(fn ($state) => 'https://wa.me/+62'.$state)
-                            ->openUrlInNewTab(),
+                            ->formatStateUsing(fn ($state) => $state ? '+62'.$state : '-')
+                            ->url(fn ($state) => $state ? 'https://wa.me/+62'.$state : null)
+                            ->openUrlInNewTab()
+                            ->placeholder('-'),
                         TextEntry::make('applicant_email')
-                            ->label(__('application.field.applicant.email'))
+                            ->label(__('application.field.applicant_email'))
                             ->weight(FontWeight::SemiBold)
-                            ->url(fn ($state) => 'mailto:'.$state)
-                            ->openUrlInNewTab(),
+                            ->url(fn ($state) => $state ? 'mailto:'.$state : null)
+                            ->openUrlInNewTab()
+                            ->placeholder('-'),
                     ]),
                 ...ApplicationProspectInfolist::get(),
                 ...ApplicationHotProspectInfolist::get(),
                 ...ApplicationUserInfolist::get(),
+                Section::make(__('application.comment.heading'))
+                    ->icon(LucideIcon::MessagesSquare)
+                    ->description(__('application.comment.description'))
+                    ->collapsible()
+                    ->collapsed(fn ($record) => $record->status === 'prospect')
+                    ->schema([
+                        TextEntry::make('comments')
+                            ->state(function (Application $record) {
+                                if (method_exists($record, 'comments')) {
+                                    return $record->comments()->with('user')->latest()->get();
+                                }
+
+                                return collect();
+                            })
+                            ->view('filament.infolists.components.latest-comment'),
+                    ])
+                    ->columnSpanFull(),
             ])
             ->columns(1);
     }

@@ -16,6 +16,7 @@ use Filament\Actions\RestoreBulkAction;
 use Filament\Actions\ViewAction;
 use Filament\Pages\Page;
 use Filament\Resources\Pages\ListRecords;
+use Filament\Tables\Columns\Summarizers\Sum;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Filters\TrashedFilter;
@@ -30,11 +31,11 @@ class ApplicationsTable
         return $table
             ->columns([
                 TextColumn::make('applicant_name')
-                    ->label(__('application.field.applicant.name'))
+                    ->label(__('application.field.applicant_name'))
                     ->sortable()
                     ->searchable(isIndividual: true),
                 TextColumn::make('priority')
-                    ->label(__('application.field.priority.label'))
+                    ->label(__('application.field.priority'))
                     ->badge()
                     ->toggleable()
                     ->visible(fn (Page $livewire) => $livewire->activeTab == StatusType::PROSPECT),
@@ -44,16 +45,22 @@ class ApplicationsTable
                     ->visible(fn (Page $livewire) => $livewire->activeTab == StatusType::USER),
                 TextColumn::make('credit_approval')
                     ->label(__('application.field.credit_approval'))
+                    ->formatStateUsing(fn ($state) => $state ? 'Rp '.number_format($state, 0, ',', '.') : '-')
                     ->toggleable()
-                    ->visible(fn (Page $livewire) => $livewire->activeTab == 'akad'),
+                    ->visible(fn (Page $livewire) => $livewire->activeTab == 'akad')
+                    ->summarize(
+                        Sum::make()
+                            ->label(__('application.field.total_credit_approval'))
+                            ->formatStateUsing(fn ($state) => 'Rp '.number_format($state, 0, ',', '.'))
+                    ),
                 TextColumn::make('notes')
                     ->label(__('application.field.notes'))
                     ->html()
                     ->toggleable(),
                 TextColumn::make('applicant_phone')
-                    ->label(__('application.field.applicant.phone'))
-                    ->formatStateUsing(fn ($state) => '+62'.$state)
-                    ->url(fn ($state) => 'https://wa.me/+62'.$state)
+                    ->label(__('application.field.applicant_phone'))
+                    ->formatStateUsing(fn ($state) => $state ? '+62'.$state : '-')
+                    ->url(fn ($state) => $state ? 'https://wa.me/+62'.$state : null)
                     ->openUrlInNewTab()
                     ->toggleable()
                     ->searchable(isIndividual: true),
@@ -63,7 +70,7 @@ class ApplicationsTable
                     ->sortable()
                     ->searchable(isIndividual: true),
                 TextColumn::make('property_name')
-                    ->label(__('application.field.property.name'))
+                    ->label(__('application.field.property_name'))
                     ->toggleable()
                     ->sortable()
                     ->searchable(isIndividual: true),
@@ -87,7 +94,7 @@ class ApplicationsTable
                 'prospect' => [
                     Group::make('priority')
                         ->label('Priority')
-                        ->orderQueryUsing(fn ($query, string $direction) => $query->orderByRaw("FIELD(priority, 'high', 'middle', 'low') {$direction}")
+                        ->orderQueryUsing(fn ($query, string $direction) => $query->orderByRaw("FIELD(priority, 'high', 'medium', 'low') {$direction}")
                         ),
                 ],
                 'user' => [
@@ -111,9 +118,10 @@ class ApplicationsTable
                     ->visible(fn (Page $livewire) => $livewire->activeTab == StatusType::USER),
                 DateRangeFilter::make('created_at')
                     ->label(__('application.field.created_at')),
-                DateRangeFilter::make('created_at')
+                DateRangeFilter::make('updated_at')
                     ->label(__('application.field.updated_at')),
-                TrashedFilter::make(),
+                TrashedFilter::make()
+                    ->visible(fn () => auth()->user()?->hasRole('super_admin')),
             ])
             ->recordActions([
                 ActionGroup::make([

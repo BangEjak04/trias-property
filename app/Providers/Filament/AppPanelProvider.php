@@ -31,13 +31,15 @@ class AppPanelProvider extends PanelProvider
         return $panel
             ->default()
             ->id('app')
-            ->path('app')
+            ->path('/')
+            ->viteTheme('resources/css/filament/app/theme.css')
             ->login(Login::class)
             ->profile(EditProfile::class, isSimple: false)
             ->colors([
                 'primary' => Color::Blue,
             ])
             ->font('Geist', provider: GoogleFontProvider::class)
+            ->brandLogo(fn () => view('filament.components.brand-logo'))
             ->sidebarCollapsibleOnDesktop()
             ->discoverResources(in: app_path('Filament/Resources'), for: 'App\Filament\Resources')
             ->discoverPages(in: app_path('Filament/Pages'), for: 'App\Filament\Pages')

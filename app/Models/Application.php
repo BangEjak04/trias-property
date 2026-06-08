@@ -11,6 +11,7 @@ use Database\Factories\ApplicationFactory;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Override;
 
@@ -64,6 +65,41 @@ class Application extends Model
 {
     /** @use HasFactory<ApplicationFactory> */
     use HasFactory, SoftDeletes;
+
+    protected static function booted()
+    {
+        static::created(function (Application $application) {
+            $application->statusLogs()->create([
+                'from_status' => null,
+                'to_status' => $application->status->value ?? 'prospect',
+                'reason' => 'Permohonan baru dibuat',
+                'changed_by' => auth()->id() ?? 1,
+            ]);
+        });
+
+        static::updating(function (Application $application) {
+            if ($application->isDirty('status')) {
+                $application->statusLogs()->create([
+                    'from_status' => $application->getOriginal('status') instanceof StatusType
+                        ? $application->getOriginal('status')->value
+                        : $application->getOriginal('status'),
+                    'to_status' => $application->status->value,
+                    'reason' => request('reason') ?? request('status_change_reason') ?? null,
+                    'changed_by' => auth()->id() ?? 1,
+                ]);
+            }
+        });
+    }
+
+    public function statusLogs(): HasMany
+    {
+        return $this->hasMany(ApplicationStatusLog::class);
+    }
+
+    public function comments(): HasMany
+    {
+        return $this->hasMany(ApplicationComment::class);
+    }
 
     #[Override]
     protected function casts()
