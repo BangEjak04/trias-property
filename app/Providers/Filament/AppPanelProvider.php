@@ -2,6 +2,7 @@
 
 namespace App\Providers\Filament;
 
+use App\Enums\NavigationGroup;
 use App\Filament\Pages\Auth\EditProfile;
 use App\Filament\Pages\Auth\Login;
 use App\Filament\Pages\Dashboard;
@@ -31,8 +32,9 @@ class AppPanelProvider extends PanelProvider
         return $panel
             ->default()
             ->id('app')
-            ->path('/')
+            ->path('app')
             ->viteTheme('resources/css/filament/app/theme.css')
+            ->favicon(asset('TriasPropertySquareLogo.png'))
             ->login(Login::class)
             ->profile(EditProfile::class, isSimple: false)
             ->colors([
@@ -69,6 +71,7 @@ class AppPanelProvider extends PanelProvider
             ->plugins([
                 FilamentShieldPlugin::make()
                     ->navigationIcon(LucideIcon::ShieldCheck)
+                    ->navigationGroup(NavigationGroup::Management)
                     ->activeNavigationIcon(LucideIcon::ShieldCheck),
                 FilamentLanguageSwitcherPlugin::make()
                     ->locales(['id', 'en'])

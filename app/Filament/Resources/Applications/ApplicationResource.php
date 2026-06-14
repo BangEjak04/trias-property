@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\Applications;
 
+use App\Enums\NavigationGroup;
 use App\Filament\Resources\Applications\Pages\CreateApplication;
 use App\Filament\Resources\Applications\Pages\EditApplication;
 use App\Filament\Resources\Applications\Pages\ListApplications;
@@ -18,12 +19,15 @@ use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use Override;
+use UnitEnum;
 
 class ApplicationResource extends Resource
 {
     protected static ?string $model = Application::class;
 
     protected static string|BackedEnum|null $navigationIcon = LucideIcon::FileUser;
+
+    protected static string|UnitEnum|null $navigationGroup = NavigationGroup::Management;
 
     protected static ?string $recordTitleAttribute = 'applicant_name';
 
